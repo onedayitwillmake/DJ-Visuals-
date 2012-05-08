@@ -34,10 +34,15 @@
 #include "cinder/gl/GlslProg.h"
 #include "cinder/Utilities.h"
 
+#include "stream/CameraStreamController.h"
+#include "stream/VideoStreamPlayback.h"
+
+
 class HelloWorldApp : public ci::app::AppBasic {
 public:
 	void setup();
 	void setupShader();
+	void setupCameraStream();
 
 	std::string loadShader( const char* fileName );
 
@@ -49,6 +54,8 @@ public:
 
 	ci::gl::GlslProg shader;
 	ci::gl::Texture texture;
+
+	stream::CameraStreamController* cameraStream;
 };
 
 void HelloWorldApp::prepareSettings( ci::app::AppBasic::Settings *settings ) {
@@ -58,7 +65,19 @@ void HelloWorldApp::prepareSettings( ci::app::AppBasic::Settings *settings ) {
 void HelloWorldApp::setup() {
 	// Test loading a texture
 	setupShader();
+	setupCameraStream();
 	texture = ci::gl::Texture( ci::loadImage( ci::app::App::get()->loadResource( RES_WHEEL ) ) );
+}
+
+void HelloWorldApp::setupCameraStream() {
+
+	stream::VideoStreamPlayback* playback = new stream::VideoStreamPlayback();
+	playback->loadMovieFile( ci::app::App::get()->getResourcePath().string() + "/LobbyFootageOne.mov" );
+
+	cameraStream = new stream::CameraStreamController();
+	cameraStream->setup();
+	cameraStream->setInitialState( playback );
+
 }
 
 void HelloWorldApp::setupShader() {
@@ -79,7 +98,7 @@ std::string HelloWorldApp::loadShader( const char* fileName ) {
 	std::string delimeter = "\n-----------------------------------\n";
 
 	ci::fs::path vertexPath = ci::app::App::get()->getResourcePath();
-	vertexPath /= fileName;;
+	vertexPath /= fileName;
 
 	std::string vertexShaderString = ci::loadString( ci::DataSourcePath::create( vertexPath ) );
 
@@ -91,7 +110,7 @@ void HelloWorldApp::mouseDown( ci::app::MouseEvent event ) {
 }
 
 void HelloWorldApp::update() {
-
+	cameraStream->update();
 }
 void HelloWorldApp::draw() {
 	// clear out the window with black
@@ -100,7 +119,7 @@ void HelloWorldApp::draw() {
 	aColor.g = fabs( sinf(getElapsedFrames() * 0.01) );
 	aColor.b = (float) getMousePos().x / getWindowWidth();
 
-	ci::gl::clear( ci::Color( 0, 0, 0 ) );
+//	ci::gl::clear( ci::Color( 0, 0, 0 ) );
 	ci::gl::color( ci::ColorA(1.0f, 1.0f, 1.0f, 1.0f) );
 
 
@@ -110,19 +129,45 @@ void HelloWorldApp::draw() {
 	mShader.uniform( "tex0", 0 );
 	mShader.uniform( "sampleOffset", Vec2f( cos( mAngle ), sin( mAngle ) ) * ( 3.0f / getWindowWidth() ) );
  */
-	if ( texture ) {
 
+
+	std::cout << cameraStream->getCurrentStream()->checkNewFrame() << std::endl;
+
+	static int counter = 0;
+	if( ++counter < 10 ) return;
+//	if( cameraStream->getCurrentStream()->checkNewFrame() ) {
 		float mAngle = getElapsedSeconds() * 0.1f;
+		(float)cameraStream->getCurrentStream()->getWidth();
+		(float)cameraStream->getCurrentStream()->getHeight();
 
-		texture.enableAndBind();
+		ci::gl::Texture aTexture = ci::gl::Texture( cameraStream->getCurrentStream()->getSurface() );
+		aTexture.enableAndBind();
 			shader.bind();
 				shader.uniform( "text0", 0 );
 				shader.uniform( "sampleOffset", ci::Vec2f( cos(mAngle), sin(mAngle) ) * ( 3.0f / getWindowWidth() ) );
-				ci::gl::draw( texture, getWindowCenter() );
+				ci::gl::draw( aTexture, getWindowCenter() );
 			shader.unbind();
-		texture.unbind();
+		aTexture.unbind();
+
+
+//	}
+
+	if ( texture ) {
+
+//		cameraStream.draw();
+
+//		texture.enableAndBind();
+//		std::cout << *cameraStream.getCurrentStream() << std::endl;
+
+//		ci::gl::Texture aTexture = ci::gl::Texture( cameraStream.getCurrentStream()->getSurface() );
+//		aTexture.enableAndBind();
+
+//		aTexture.unbind();
+//		texture.unbind();
 
 	}
+
+	;
 
 }
 
@@ -132,3 +177,4 @@ void HelloWorldApp::shutdown() {
 	AppBasic::shutdown();
 }
 CINDER_APP_BASIC( HelloWorldApp, ci::app::RendererGl )
+//

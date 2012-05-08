@@ -5,6 +5,7 @@
 *.o
 # Debug files
 *.d
+resources/*.mov
 Release/
 Debug/
 CINDER_PATH_LINK
