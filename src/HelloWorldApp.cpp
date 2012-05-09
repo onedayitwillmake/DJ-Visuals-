@@ -25,6 +25,7 @@
 #include "cinder/app/AppBasic.h"
 #include "cinder/gl/gl.h"
 #include "cinder/gl/Texture.h"
+#include "cinder/Surface.h"
 #include "cinder/ImageIo.h"
 #include "cinder/Vector.h"
 #include "cinder/app/MouseEvent.h"
@@ -48,41 +49,47 @@ public:
 
 	void prepareSettings( ci::app::AppBasic::Settings *settings );
 	void mouseDown( ci::app::MouseEvent event );
+	void keyDown( ci::app::KeyEvent event );
 	void update();
 	void draw();
 	void shutdown();
 
 	ci::gl::GlslProg shader;
 	ci::gl::Texture texture;
+	ci::gl::Texture fakeTexture;
 
 	stream::CameraStreamController* cameraStream;
 };
 
 void HelloWorldApp::prepareSettings( ci::app::AppBasic::Settings *settings ) {
-	settings->setWindowSize( 800, 600 );
+	settings->setWindowSize( 1200, 800 );
 }
 
 void HelloWorldApp::setup() {
 	// Test loading a texture
 	setupShader();
 	setupCameraStream();
+
+	ci::Surface8u fakeSurface(640, 480, false);
+	fakeTexture = ci::gl::Texture( fakeSurface );
+
 	texture = ci::gl::Texture( ci::loadImage( ci::app::App::get()->loadResource( RES_WHEEL ) ) );
 }
 
 void HelloWorldApp::setupCameraStream() {
 
 	stream::VideoStreamPlayback* playback = new stream::VideoStreamPlayback();
-	playback->loadMovieFile( ci::app::App::get()->getResourcePath().string() + "/LobbyFootageOne.mov" );
 
 	cameraStream = new stream::CameraStreamController();
 	cameraStream->setup();
 	cameraStream->setInitialState( playback );
 
+	playback->loadMovieFile( ci::app::App::get()->getResourcePath().string() + "/LobbyFootageTwo.mov" );
 }
 
 void HelloWorldApp::setupShader() {
 	try {
-		shader = ci::gl::GlslProg( loadShader( "passThru_vert.glsl" ).c_str() , loadShader( "gaussianBlur_frag.glsl" ).c_str()  );
+		shader = ci::gl::GlslProg( loadShader( "passThru_vert.vs" ).c_str() , loadShader( "dataMoshing_frag.fs" ).c_str()  );
 	}
 	catch( ci::gl::GlslProgCompileExc &exc ) {
 		std::cout << "Shader compile error: " << std::endl;
@@ -91,6 +98,8 @@ void HelloWorldApp::setupShader() {
 	catch( ... ) {
 		std::cout << "Unable to load shader" << std::endl;
 	}
+
+	std::cout << "HelloWorldApp::setupShader - Shader loaded successfully..." << std::endl;
 
 }
 
@@ -109,66 +118,42 @@ std::string HelloWorldApp::loadShader( const char* fileName ) {
 void HelloWorldApp::mouseDown( ci::app::MouseEvent event ) {
 }
 
+void HelloWorldApp::keyDown( ci::app::KeyEvent event ) {
+	if( event.getChar() == ci::app::KeyEvent::KEY_q ) {
+		quit();
+	}
+}
+
 void HelloWorldApp::update() {
 	cameraStream->update();
 }
 void HelloWorldApp::draw() {
+	// No new frame exit
+	if( !cameraStream->getCurrentStream()->checkNewFrame() ) return;
+
 	// clear out the window with black
 	ci::Color aColor = ci::Color( 0, 0, 0 );
 	aColor.r = fabs( cosf(getElapsedFrames() * 0.008) );
 	aColor.g = fabs( sinf(getElapsedFrames() * 0.01) );
 	aColor.b = (float) getMousePos().x / getWindowWidth();
 
-//	ci::gl::clear( ci::Color( 0, 0, 0 ) );
+	ci::gl::clear( ci::Color( 0, 0, 0 ) );
 	ci::gl::color( ci::ColorA(1.0f, 1.0f, 1.0f, 1.0f) );
 
 
-/**
- * mTexture.enableAndBind();
-	mShader.bind();
-	mShader.uniform( "tex0", 0 );
-	mShader.uniform( "sampleOffset", Vec2f( cos( mAngle ), sin( mAngle ) ) * ( 3.0f / getWindowWidth() ) );
- */
 
-
-	std::cout << cameraStream->getCurrentStream()->checkNewFrame() << std::endl;
-
-	static int counter = 0;
-	if( ++counter < 10 ) return;
-//	if( cameraStream->getCurrentStream()->checkNewFrame() ) {
-		float mAngle = getElapsedSeconds() * 0.1f;
-		(float)cameraStream->getCurrentStream()->getWidth();
-		(float)cameraStream->getCurrentStream()->getHeight();
+		float mAngle = atan2f( (float)getMousePos().y, (float) getMousePos().x );
 
 		ci::gl::Texture aTexture = ci::gl::Texture( cameraStream->getCurrentStream()->getSurface() );
-		aTexture.enableAndBind();
+		fakeTexture.enableAndBind();
 			shader.bind();
-				shader.uniform( "text0", 0 );
+				shader.uniform( "aColor", (float)getWindowSize().x );
+				shader.uniform( "aSecondColor", getWindowSize().y );
+				shader.uniform( "windowSize", ci::Vec2f( getWindowSize().x, getWindowSize().y) );
 				shader.uniform( "sampleOffset", ci::Vec2f( cos(mAngle), sin(mAngle) ) * ( 3.0f / getWindowWidth() ) );
-				ci::gl::draw( aTexture, getWindowCenter() );
+				ci::gl::draw( aTexture, ci::Rectf(0,0, getWindowWidth(), getWindowHeight() ));
 			shader.unbind();
-		aTexture.unbind();
-
-
-//	}
-
-	if ( texture ) {
-
-//		cameraStream.draw();
-
-//		texture.enableAndBind();
-//		std::cout << *cameraStream.getCurrentStream() << std::endl;
-
-//		ci::gl::Texture aTexture = ci::gl::Texture( cameraStream.getCurrentStream()->getSurface() );
-//		aTexture.enableAndBind();
-
-//		aTexture.unbind();
-//		texture.unbind();
-
-	}
-
-	;
-
+		fakeTexture.unbind();
 }
 
 
