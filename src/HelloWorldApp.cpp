@@ -147,8 +147,6 @@ void HelloWorldApp::draw() {
 		ci::gl::Texture aTexture = ci::gl::Texture( cameraStream->getCurrentStream()->getSurface() );
 		fakeTexture.enableAndBind();
 			shader.bind();
-				shader.uniform( "aColor", (float)getWindowSize().x );
-				shader.uniform( "aSecondColor", getWindowSize().y );
 				shader.uniform( "windowSize", ci::Vec2f( getWindowSize().x, getWindowSize().y) );
 				shader.uniform( "sampleOffset", ci::Vec2f( cos(mAngle), sin(mAngle) ) * ( 3.0f / getWindowWidth() ) );
 				ci::gl::draw( aTexture, ci::Rectf(0,0, getWindowWidth(), getWindowHeight() ));
