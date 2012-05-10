@@ -12,12 +12,14 @@ uniform vec3 colors[ kCOLOR_SIZE ];
 uniform float colorSize;
 
 uniform vec2 windowSize;
+uniform sampler2D tex0;
 
 void main() {
 	int ix = int( gl_TexCoord[0].t * float(kCOLUMN_COUNT) );
 	int iy = int( gl_TexCoord[0].s * float(kROW_COUNT) );
 	int index = int( ix * kROW_COUNT + iy );
-	vec3 colorRGB = colors[  index ];
-	gl_FragColor.rgb = colorRGB;
+	vec3 colorRGB = colors[ index ];
+	if( colorRGB.g > 0.2 ) gl_FragColor.rgb = colorRGB;
+	else gl_FragColor.rgb = texture2D( tex0, gl_TexCoord[0].st  ).rgb;
 	gl_FragColor.a = 1.0;
 }

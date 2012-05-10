@@ -1,27 +1,10 @@
-/**
- * EclipseLovesCinder example application
- *
- **********************************************************
- **********************************************************
- ********************* IMPORTANT **************************
- * On first run:
- * 	- Select Project -> Clean...
- *
- *  - If change the project name, you have to tell the debugger where the new one is:
- *  	Go into Run -> Debug Configurations
- *  	Set where the application lives to something like this
- *  	Debug/{APPNAME}/Contents/MacOS/{APPNAME}
- *
- **********************************************************
- **********************************************************
- *
- * This project is released under public domain, do whatever with it.
- *
- *
- * Mario Gonzalez
- * http://onedayitwillmake
+/*
+ * HotSugarShow.cpp
+ *  Created on: April 1, 2012
+ *      Author: mariogonzalez
+ *      Abstract:
+ *      	A live visualizer for Ninjatune artist HotSugar, focus is on parametric datamoshing effect
  */
-
 #include "cinder/app/AppBasic.h"
 #include "cinder/gl/gl.h"
 #include "cinder/gl/Texture.h"
@@ -55,11 +38,15 @@ public:
 	void keyDown( ci::app::KeyEvent event );
 	void update();
 	void updateColorArray();
+	void updateCameraTexture();
 	void draw();
 	void shutdown();
 
 	ci::gl::GlslProg shader;
-	ci::gl::Texture texture;
+
+	ci::gl::Texture cameraTexture;
+	ci::Surface8u cameraSurface;
+
 	float colors[ (kWINDOW_DIMENSIONS_WIDTH/kDATAMOSH_SPACING) * (kWINDOW_DIMENSIONS_HEIGHT/kDATAMOSH_SPACING) * 3 ];
 	int colorSize;
 
@@ -85,33 +72,6 @@ void HelloWorldApp::setupCameraStream() {
 	cameraStream->setInitialState( playback );
 
 	playback->loadMovieFile( ci::app::App::get()->getResourcePath().string() + "/LobbyFootageTwo.mov" );
-}
-
-void HelloWorldApp::updateColorArray() {
-	// DEBUG - run once
-	static bool firstRun = true; if( !firstRun ) return; firstRun = false;
-
-	// determine size and number of buckets
-	int spacing = kDATAMOSH_SPACING;
-	int rowCount = floorf( (float)getWindowSize().y/(float)spacing );
-	int columnCount = floorf( (float)getWindowSize().x/(float)spacing );
-	colorSize = rowCount * columnCount;
-
-	// Create buckets of color blocks
-	for(int x = 0; x < getWindowSize().x; x+=spacing ) {
-		for( int y = 0; y < getWindowSize().y; y+=spacing ) {
-			int ix = x/spacing;
-			int iy = y/spacing;
-			int length = floorf( (float)getWindowSize().y/(float)spacing );
-
-			// Convert the 2D array index, into a 1D
-			int index = ix*length + iy;
-			int colorIndex = index * 3; // RGB
-			colors[ colorIndex + 0 ] = ci::Rand::randFloat();
-			colors[ colorIndex + 1 ] = ci::Rand::randFloat();
-			colors[ colorIndex + 2 ] = ci::Rand::randFloat();
-		}
-	}
 }
 
 void HelloWorldApp::setupShader() {
@@ -151,13 +111,53 @@ void HelloWorldApp::keyDown( ci::app::KeyEvent event ) {
 	}
 }
 
+
+void HelloWorldApp::updateColorArray() {
+	// DEBUG - run once
+//	static bool firstRun = true; if( !firstRun ) return; firstRun = false;
+
+	// determine size and number of buckets
+	int spacing = kDATAMOSH_SPACING;
+	int rowCount = floorf( (float)getWindowSize().y/(float)spacing );
+	int columnCount = floorf( (float)getWindowSize().x/(float)spacing );
+	colorSize = rowCount * columnCount;
+
+	// Create buckets of color blocks
+	for(int x = 0; x < getWindowSize().x; x+=spacing ) {
+		for( int y = 0; y < getWindowSize().y; y+=spacing ) {
+			int ix = x/spacing;
+			int iy = y/spacing;
+			int length = floorf( (float)getWindowSize().y/(float)spacing );
+
+			// Convert the 2D array index, into a 1D
+			int index = ix*length + iy;
+			int colorIndex = index * 3; // RGB
+			colors[ colorIndex + 0 ] = ( (float)ix/(float)columnCount );
+			colors[ colorIndex + 1 ] = ( (float)iy/(float)rowCount );
+			colors[ colorIndex + 2 ] = ci::Rand::randFloat();
+
+			//std::cout << "x:"<< x << "\t y:" << y << "\t iX:" << ix << "\t iY: " << iy << "\t index:" << index << "\t t:" << derrivedIndex << "\t xlength:" << length << "\t colorSize:" << colorSize << std::endl;
+		}
+	}
+}
+
+
+void HelloWorldApp::updateCameraTexture() {
+//	if( !cameraStream->getCurrentStream()->checkNewFrame() ) return;
+
+
+	cameraSurface = cameraStream->getCurrentStream()->getSurface();
+	cameraTexture = ci::gl::Texture( cameraSurface );
+}
 void HelloWorldApp::update() {
 	cameraStream->update();
+
 	updateColorArray();
 }
 void HelloWorldApp::draw() {
 	// No new frame exit
 	if( !cameraStream->getCurrentStream()->checkNewFrame() ) return;
+	updateCameraTexture();
 
 	// clear out the window with black
 	ci::Color aColor = ci::Color( 0, 0, 0 );
@@ -170,17 +170,14 @@ void HelloWorldApp::draw() {
 
 	float mAngle = atan2f( (float)getMousePos().y, (float) getMousePos().x );
 
-
-	ci::gl::Texture aTexture = ci::gl::Texture( cameraStream->getCurrentStream()->getSurface() );
-
-	aTexture.enableAndBind();
+	cameraTexture.enableAndBind();
 		shader.bind();
 		 	glUniform3fv( shader.getHandle(), colorSize, colors );
 			shader.uniform( "colorSize", (float)colorSize );
 			shader.uniform( "windowSize", ci::Vec2f( getWindowSize().x, getWindowSize().y) );
-			ci::gl::draw( aTexture, ci::Rectf(0,0, getWindowWidth(), getWindowHeight() ));
+			ci::gl::draw( cameraTexture, ci::Rectf(0,0, getWindowWidth(), getWindowHeight() ));
 		shader.unbind();
-	aTexture.unbind();
+	cameraTexture.unbind();
 }
 
 
