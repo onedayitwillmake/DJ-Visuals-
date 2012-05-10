@@ -88,41 +88,30 @@ void HelloWorldApp::setupCameraStream() {
 }
 
 void HelloWorldApp::updateColorArray() {
-	static bool firstRun = true;
-	int spacing = kDATAMOSH_SPACING;
-	int index = 0;
-	int derrivedIndex = 0;
+	// DEBUG - run once
+	static bool firstRun = true; if( !firstRun ) return; firstRun = false;
 
-	// determin size
+	// determine size and number of buckets
+	int spacing = kDATAMOSH_SPACING;
 	int rowCount = floorf( (float)getWindowSize().y/(float)spacing );
 	int columnCount = floorf( (float)getWindowSize().x/(float)spacing );
 	colorSize = rowCount * columnCount;
 
-
-	// Iterate through all pixels
+	// Create buckets of color blocks
 	for(int x = 0; x < getWindowSize().x; x+=spacing ) {
 		for( int y = 0; y < getWindowSize().y; y+=spacing ) {
 			int ix = x/spacing;
 			int iy = y/spacing;
-
 			int length = floorf( (float)getWindowSize().y/(float)spacing );
 
 			// Convert the 2D array index, into a 1D
-			derrivedIndex = ix*length + iy;
-			int colorIndex = derrivedIndex * 3; // RGB
-
+			int index = ix*length + iy;
+			int colorIndex = index * 3; // RGB
 			colors[ colorIndex + 0 ] = ci::Rand::randFloat();
 			colors[ colorIndex + 1 ] = ci::Rand::randFloat();
 			colors[ colorIndex + 2 ] = ci::Rand::randFloat();
-
-			if( firstRun ) {
-				std::cout << "x:"<< x << "\t y:" << y << "\t iX:" << ix << "\t iY: " << iy << "\t index:" << index << "\t t:" << derrivedIndex << "\t xlength:" << length << "\t colorSize:" << colorSize << std::endl;
-			}
-			++index;
 		}
 	}
-
-	firstRun = false;
 }
 
 void HelloWorldApp::setupShader() {
@@ -184,14 +173,11 @@ void HelloWorldApp::draw() {
 
 	ci::gl::Texture aTexture = ci::gl::Texture( cameraStream->getCurrentStream()->getSurface() );
 
-	float colorInfo[3] = { 0.1f, 0.2f, 0.3f };
 	aTexture.enableAndBind();
 		shader.bind();
-//			shader.uniform( "colors", colorInfo, 3 );
-//		 	glUniform3fv( shader.getHandle(), colorSize, colors );
-//			shader.uniform( "colorSize", (float)colorSize );
-//			shader.uniform( "windowSize", ci::Vec2f( getWindowSize().x, getWindowSize().y) );
-//			shader.uniform( "sampleOffset", ci::Vec2f( cos(mAngle), sin(mAngle) ) * ( 3.0f / getWindowWidth() ) );
+		 	glUniform3fv( shader.getHandle(), colorSize, colors );
+			shader.uniform( "colorSize", (float)colorSize );
+			shader.uniform( "windowSize", ci::Vec2f( getWindowSize().x, getWindowSize().y) );
 			ci::gl::draw( aTexture, ci::Rectf(0,0, getWindowWidth(), getWindowHeight() ));
 		shader.unbind();
 	aTexture.unbind();
