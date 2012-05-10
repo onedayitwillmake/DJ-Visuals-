@@ -1,19 +1,23 @@
 #version 110
 
-uniform float aColor;
+uniform vec3 colors[35];
+uniform float colorSize;
+
 uniform vec2 windowSize;
 uniform vec2 sampleOffset;
 
 void main() {
-	
-	float steps = 5.0;
-	float ix = floor(gl_TexCoord[0].s*steps) / steps;
-	float iy = floor(gl_TexCoord[0].t*steps) / steps;
+	float t = 10.0;
+	float ix = floor(gl_TexCoord[0].s*colorSize);
+	float iy = floor(gl_TexCoord[0].t*windowSize.y) / windowSize.y;
+	// vec3 colorRGB = colors[ int( ix * 34.0 ) ];
+	vec3 colorRGB = colors[  int( ix ) ];
 	// vec3 sum = vec3( 0.0, 0.0, 0.0 );
+	
 	// gl_FragColor.rgb = texture2D( abc, gl_TexCoord[0].st ).rgb;
-	gl_FragColor.r = ix;//float( int( gl_TexCoord[0].s*windowSize.x ) ) / windowSize.x;
-	gl_FragColor.g = iy;//float( int( gl_TexCoord[0].t*windowSize.y ) ) / windowSize.y;//sampleOffset.s;//float( int( gl_TexCoord[0].t * windowSize.y ) );
-	gl_FragColor.b = 0.0;
-	// gl_FragColor.rgb = sum;
+	// gl_FragColor.rgb = colorRGB;//float( int( gl_TexCoord[0].s*windowSize.x ) ) / windowSize.x;
+	// gl_FragColor.g = ix;
+	// gl_FragColor.b = iy;
+	gl_FragColor.rgb = colorRGB;
 	gl_FragColor.a = 1.0;
 }

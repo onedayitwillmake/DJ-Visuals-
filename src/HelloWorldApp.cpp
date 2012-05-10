@@ -38,6 +38,9 @@
 #include "stream/CameraStreamController.h"
 #include "stream/VideoStreamPlayback.h"
 
+#define IMAGE_WIDTH 64
+#define IMAGE_HEIGHT 48
+
 
 class HelloWorldApp : public ci::app::AppBasic {
 public:
@@ -51,12 +54,14 @@ public:
 	void mouseDown( ci::app::MouseEvent event );
 	void keyDown( ci::app::KeyEvent event );
 	void update();
+	void updateColorArray();
 	void draw();
 	void shutdown();
 
 	ci::gl::GlslProg shader;
 	ci::gl::Texture texture;
-	ci::gl::Texture fakeTexture;
+	float colors[ 35*3 ];
+	int colorSize;
 
 	stream::CameraStreamController* cameraStream;
 };
@@ -69,11 +74,6 @@ void HelloWorldApp::setup() {
 	// Test loading a texture
 	setupShader();
 	setupCameraStream();
-
-	ci::Surface8u fakeSurface(640, 480, false);
-	fakeTexture = ci::gl::Texture( fakeSurface );
-
-	texture = ci::gl::Texture( ci::loadImage( ci::app::App::get()->loadResource( RES_WHEEL ) ) );
 }
 
 void HelloWorldApp::setupCameraStream() {
@@ -85,6 +85,38 @@ void HelloWorldApp::setupCameraStream() {
 	cameraStream->setInitialState( playback );
 
 	playback->loadMovieFile( ci::app::App::get()->getResourcePath().string() + "/LobbyFootageTwo.mov" );
+}
+
+void HelloWorldApp::updateColorArray() {
+	static bool firstRun = true;
+	int spacing = 10;
+	int index = 0;
+	int derrivedIndex = 0;
+	for(int x = 0; x < IMAGE_WIDTH; x+=spacing ) {
+		for( int y = 0; y < IMAGE_HEIGHT; y+=spacing ) {
+			int ix = x/spacing;
+			int iy = y/spacing;
+
+			int length = floorf( (float)IMAGE_WIDTH/(float)spacing );
+			length -= 1; // we're doing less than IMAGE_WIDTH, so we never get to the last one
+
+			// Convert the 2D array index, into a 1D
+			derrivedIndex = ix*length + iy;
+
+			int colorIndex = derrivedIndex * 3; // Per component
+			colors[ colorIndex + 0 ] = ci::Rand::randFloat();
+			colors[ colorIndex + 1 ] = ci::Rand::randFloat();
+			colors[ colorIndex + 2 ] = ci::Rand::randFloat();
+
+			if( firstRun ) {
+				firstRun = false;
+				std::cout << "iX:" << ix << " iY: " << iy << " index:" << index << " t:" << derrivedIndex << " length:" << length << std::endl;
+			}
+			++index;
+		}
+	}
+
+	colorSize = derrivedIndex;
 }
 
 void HelloWorldApp::setupShader() {
@@ -126,6 +158,7 @@ void HelloWorldApp::keyDown( ci::app::KeyEvent event ) {
 
 void HelloWorldApp::update() {
 	cameraStream->update();
+	updateColorArray();
 }
 void HelloWorldApp::draw() {
 	// No new frame exit
@@ -140,18 +173,22 @@ void HelloWorldApp::draw() {
 	ci::gl::clear( ci::Color( 0, 0, 0 ) );
 	ci::gl::color( ci::ColorA(1.0f, 1.0f, 1.0f, 1.0f) );
 
+	float mAngle = atan2f( (float)getMousePos().y, (float) getMousePos().x );
 
 
-		float mAngle = atan2f( (float)getMousePos().y, (float) getMousePos().x );
+	ci::gl::Texture aTexture = ci::gl::Texture( cameraStream->getCurrentStream()->getSurface() );
 
-		ci::gl::Texture aTexture = ci::gl::Texture( cameraStream->getCurrentStream()->getSurface() );
-		fakeTexture.enableAndBind();
-			shader.bind();
-				shader.uniform( "windowSize", ci::Vec2f( getWindowSize().x, getWindowSize().y) );
-				shader.uniform( "sampleOffset", ci::Vec2f( cos(mAngle), sin(mAngle) ) * ( 3.0f / getWindowWidth() ) );
-				ci::gl::draw( aTexture, ci::Rectf(0,0, getWindowWidth(), getWindowHeight() ));
-			shader.unbind();
-		fakeTexture.unbind();
+	float colorInfo[3] = { 0.1f, 0.2f, 0.3f };
+	aTexture.enableAndBind();
+		shader.bind();
+//			shader.uniform( "colors", colorInfo, 3 );
+		 	glUniform3fv( shader.getHandle(), colorSize, colors );
+			shader.uniform( "colorSize", (float)colorSize );
+			shader.uniform( "windowSize", ci::Vec2f( getWindowSize().x, getWindowSize().y) );
+			shader.uniform( "sampleOffset", ci::Vec2f( cos(mAngle), sin(mAngle) ) * ( 3.0f / getWindowWidth() ) );
+			ci::gl::draw( aTexture, ci::Rectf(0,0, getWindowWidth(), getWindowHeight() ));
+		shader.unbind();
+	aTexture.unbind();
 }
 
 
