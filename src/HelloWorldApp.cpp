@@ -38,10 +38,6 @@
 #include "stream/CameraStreamController.h"
 #include "stream/VideoStreamPlayback.h"
 
-#define IMAGE_WIDTH 64
-#define IMAGE_HEIGHT 48
-
-
 class HelloWorldApp : public ci::app::AppBasic {
 public:
 	void setup();
@@ -60,7 +56,7 @@ public:
 
 	ci::gl::GlslProg shader;
 	ci::gl::Texture texture;
-	float colors[ 35*3 ];
+	float colors[];
 	int colorSize;
 
 	stream::CameraStreamController* cameraStream;
@@ -89,34 +85,39 @@ void HelloWorldApp::setupCameraStream() {
 
 void HelloWorldApp::updateColorArray() {
 	static bool firstRun = true;
-	int spacing = 10;
+	int spacing = 100;
 	int index = 0;
 	int derrivedIndex = 0;
-	for(int x = 0; x < IMAGE_WIDTH; x+=spacing ) {
-		for( int y = 0; y < IMAGE_HEIGHT; y+=spacing ) {
+
+	// determin size
+	int rowCount = floorf( (float)getWindowSize().y/(float)spacing );
+	int columnCount = floorf( (float)getWindowSize().x/(float)spacing );
+	colorSize = rowCount / columnCount;
+
+	std::cout << "HELLO!" << std::endl;
+	for(int x = 0; x < getWindowSize().x; x+=spacing ) {
+		for( int y = 0; y < getWindowSize().y; y+=spacing ) {
 			int ix = x/spacing;
 			int iy = y/spacing;
 
-			int length = floorf( (float)IMAGE_WIDTH/(float)spacing );
-			length -= 1; // we're doing less than IMAGE_WIDTH, so we never get to the last one
+			int length = floorf( (float)getWindowSize().y/(float)spacing );
 
 			// Convert the 2D array index, into a 1D
 			derrivedIndex = ix*length + iy;
 
 			int colorIndex = derrivedIndex * 3; // Per component
-			colors[ colorIndex + 0 ] = ci::Rand::randFloat();
-			colors[ colorIndex + 1 ] = ci::Rand::randFloat();
-			colors[ colorIndex + 2 ] = ci::Rand::randFloat();
+//			colors[ colorIndex + 0 ] = ci::Rand::randFloat();
+//			colors[ colorIndex + 1 ] = ci::Rand::randFloat();
+//			colors[ colorIndex + 2 ] = ci::Rand::randFloat();
 
 			if( firstRun ) {
-				firstRun = false;
-				std::cout << "iX:" << ix << " iY: " << iy << " index:" << index << " t:" << derrivedIndex << " length:" << length << std::endl;
+				std::cout << "x:"<< x << "\t y:" << y << "\t iX:" << ix << "\t iY: " << iy << "\t index:" << index << "\t t:" << derrivedIndex << "\t xlength:" << length << "\t maxLen" << maxLen << std::endl;
 			}
 			++index;
 		}
 	}
 
-	colorSize = derrivedIndex;
+	firstRun = false;
 }
 
 void HelloWorldApp::setupShader() {
@@ -182,10 +183,10 @@ void HelloWorldApp::draw() {
 	aTexture.enableAndBind();
 		shader.bind();
 //			shader.uniform( "colors", colorInfo, 3 );
-		 	glUniform3fv( shader.getHandle(), colorSize, colors );
-			shader.uniform( "colorSize", (float)colorSize );
-			shader.uniform( "windowSize", ci::Vec2f( getWindowSize().x, getWindowSize().y) );
-			shader.uniform( "sampleOffset", ci::Vec2f( cos(mAngle), sin(mAngle) ) * ( 3.0f / getWindowWidth() ) );
+//		 	glUniform3fv( shader.getHandle(), colorSize, colors );
+//			shader.uniform( "colorSize", (float)colorSize );
+//			shader.uniform( "windowSize", ci::Vec2f( getWindowSize().x, getWindowSize().y) );
+//			shader.uniform( "sampleOffset", ci::Vec2f( cos(mAngle), sin(mAngle) ) * ( 3.0f / getWindowWidth() ) );
 			ci::gl::draw( aTexture, ci::Rectf(0,0, getWindowWidth(), getWindowHeight() ));
 		shader.unbind();
 	aTexture.unbind();
