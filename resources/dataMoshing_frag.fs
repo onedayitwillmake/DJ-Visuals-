@@ -1,6 +1,10 @@
 #version 110
 
-uniform vec3 colors[35];
+#define kWINDOW_DIMENSIONS_WIDTH 1200
+#define kWINDOW_DIMENSIONS_HEIGHT 800
+#define kDATAMOSH_SPACING 100
+#define kCOLOR_SIZE (kWINDOW_DIMENSIONS_WIDTH/kDATAMOSH_SPACING) * (kWINDOW_DIMENSIONS_HEIGHT/kDATAMOSH_SPACING)
+uniform vec3 colors[ kCOLOR_SIZE ];
 uniform float colorSize;
 
 uniform vec2 windowSize;
