@@ -38,6 +38,10 @@
 #include "stream/CameraStreamController.h"
 #include "stream/VideoStreamPlayback.h"
 
+#define kWINDOW_DIMENSIONS_WIDTH 1200
+#define kWINDOW_DIMENSIONS_HEIGHT 800
+#define kDATAMOSH_SPACING 100
+
 class HelloWorldApp : public ci::app::AppBasic {
 public:
 	void setup();
@@ -56,14 +60,14 @@ public:
 
 	ci::gl::GlslProg shader;
 	ci::gl::Texture texture;
-	float colors[];
+	float colors[ (kWINDOW_DIMENSIONS_WIDTH/kDATAMOSH_SPACING) * (kWINDOW_DIMENSIONS_HEIGHT/kDATAMOSH_SPACING) * 3 ];
 	int colorSize;
 
 	stream::CameraStreamController* cameraStream;
 };
 
 void HelloWorldApp::prepareSettings( ci::app::AppBasic::Settings *settings ) {
-	settings->setWindowSize( 1200, 800 );
+	settings->setWindowSize( kWINDOW_DIMENSIONS_WIDTH, kWINDOW_DIMENSIONS_HEIGHT );
 }
 
 void HelloWorldApp::setup() {
@@ -85,16 +89,17 @@ void HelloWorldApp::setupCameraStream() {
 
 void HelloWorldApp::updateColorArray() {
 	static bool firstRun = true;
-	int spacing = 100;
+	int spacing = kDATAMOSH_SPACING;
 	int index = 0;
 	int derrivedIndex = 0;
 
 	// determin size
 	int rowCount = floorf( (float)getWindowSize().y/(float)spacing );
 	int columnCount = floorf( (float)getWindowSize().x/(float)spacing );
-	colorSize = rowCount / columnCount;
+	colorSize = rowCount * columnCount;
 
-	std::cout << "HELLO!" << std::endl;
+
+	// Iterate through all pixels
 	for(int x = 0; x < getWindowSize().x; x+=spacing ) {
 		for( int y = 0; y < getWindowSize().y; y+=spacing ) {
 			int ix = x/spacing;
@@ -104,14 +109,14 @@ void HelloWorldApp::updateColorArray() {
 
 			// Convert the 2D array index, into a 1D
 			derrivedIndex = ix*length + iy;
+			int colorIndex = derrivedIndex * 3; // RGB
 
-			int colorIndex = derrivedIndex * 3; // Per component
-//			colors[ colorIndex + 0 ] = ci::Rand::randFloat();
-//			colors[ colorIndex + 1 ] = ci::Rand::randFloat();
-//			colors[ colorIndex + 2 ] = ci::Rand::randFloat();
+			colors[ colorIndex + 0 ] = ci::Rand::randFloat();
+			colors[ colorIndex + 1 ] = ci::Rand::randFloat();
+			colors[ colorIndex + 2 ] = ci::Rand::randFloat();
 
 			if( firstRun ) {
-				std::cout << "x:"<< x << "\t y:" << y << "\t iX:" << ix << "\t iY: " << iy << "\t index:" << index << "\t t:" << derrivedIndex << "\t xlength:" << length << "\t maxLen" << maxLen << std::endl;
+				std::cout << "x:"<< x << "\t y:" << y << "\t iX:" << ix << "\t iY: " << iy << "\t index:" << index << "\t t:" << derrivedIndex << "\t xlength:" << length << "\t colorSize:" << colorSize << std::endl;
 			}
 			++index;
 		}
