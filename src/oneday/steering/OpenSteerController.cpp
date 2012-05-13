@@ -16,25 +16,53 @@
 #include "OpenSteer/Obstacle.h"
 #include "OpenSteer/UnusedParameter.h"
 
-#include "oneday/steering/Boid.h"
-
 #include "cinder/app/AppBasic.h"
 
 namespace oneday { namespace steering {
 
-OpenSteerController::OpenSteerController() {}
-OpenSteerController::~OpenSteerController() {}
+///// SETUP
 void OpenSteerController::setup() {
-	population = 0;
+
 	currentTime = ci::app::App::get()->getElapsedSeconds();
+
+    // make default-sized flock
+	population = 0;
+    for (int i = 0; i < 200; i++) addBoidToFlock ();
+}
+
+///// MEMORY
+OpenSteerController::~OpenSteerController() {
+    while ( population > 0 ) removeBoidFromFlock (); // delete each member of the flock
+    delete pd; pd = NULL;
+}
+
+
+void OpenSteerController::reset() {
+    // reset each boid in flock
+    for(std::vector< Boid* >::const_iterator itr = _flock.begin(); itr != _flock.end(); ++itr) {
+    	(**itr).reset();
+    }
+
 }
 
 void OpenSteerController::update() {
 	double delta = ci::app::App::get()->getElapsedSeconds() - currentTime;
-	currentTime = ci::app::App::get()->getElapsedSeconds();
+
+#ifndef NO_LQ_BIN_STATS
+	Boid::maxNeighbors = Boid::totalNeighbors = 0;
+	Boid::minNeighbors = std::numeric_limits<int>::max();
+#endif // NO_LQ_BIN_STATS
+
+    // update flock simulation for each boid
+    for(std::vector< Boid* >::const_iterator itr = _flock.begin(); itr != _flock.end(); ++itr) {
+        (**itr).update(currentTime, delta);
+    }
+
+    currentTime = ci::app::App::get()->getElapsedSeconds();
 }
 
 void OpenSteerController::draw() {
+
 }
 
 void OpenSteerController::addBoidToFlock() {

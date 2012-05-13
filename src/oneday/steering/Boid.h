@@ -10,6 +10,7 @@
 #define BOID_H_
 
 
+
 #include <sstream>
 #include "OpenSteer/SimpleVehicle.h"
 #include "OpenSteer/OpenSteerDemo.h"
@@ -30,17 +31,15 @@
 #endif // NO_LQ_BIN_STATS
 
 
+typedef OpenSteer::AbstractProximityDatabase< OpenSteer::AbstractVehicle* > ProximityDatabase;
+typedef OpenSteer::AbstractTokenForProximityDatabase< OpenSteer::AbstractVehicle* > ProximityToken;
+typedef OpenSteer::Vec3 OpenSteerVec3;
+
+
 namespace oneday { namespace steering {
-
 class Boid : public OpenSteer::SimpleVehicle {
+	typedef std::vector<Boid*> groupType; // type for a flock: an STL vector of Boid pointers
 
-	typedef OpenSteer::AbstractProximityDatabase< OpenSteer::AbstractVehicle* > ProximityDatabase;
-	typedef OpenSteer::AbstractTokenForProximityDatabase< OpenSteer::AbstractVehicle* > ProximityToken;
-
-
-	// type for a flock: an STL vector of Boid pointers
-    typedef std::vector<Boid*> groupType;
-    typedef OpenSteer::Vec3 OpenSteerVec3;
 public:
 	Boid( ProximityDatabase& pd );
 	~Boid();
@@ -48,23 +47,28 @@ public:
 	void reset();
 	void draw();
 	void update( const float currentTime, const float elapsedTime );
+
+#ifndef NO_LQ_BIN_STATS
+        static size_t minNeighbors, maxNeighbors, totalNeighbors;
+#endif // NO_LQ_BIN_STATS
 private:
 	static OpenSteer::ObstacleGroup obstacles;
 	static OpenSteer::AVGroup neighbors;
 	static float worldRadius;
-#ifndef NO_LQ_BIN_STATS
-	static size_t minNeighbors, maxNeighbors, totalNeighbors;
-#endif // NO_LQ_BIN_STATS
 
 	ProximityToken* proximityToken;
 
 	OpenSteerVec3 steerToFlock();
-	void sphericalWrapAround();
-    void regenerateLocalSpace (const OpenSteerVec3& newVelocity,
-                               const float elapsedTime);
+	void
+	sphericalWrapAround();
+
+	void
+	regenerateLocalSpace( const OpenSteerVec3& newVelocity, const float elapsedTime );
+
+	void regenerateLocalSpaceForBanking (const OpenSteerVec3& newVelocity, const float elapsedTime);
 
 
-	///// ACCESSORS
+//	///// ACCESSORS
 	void newPD( ProximityDatabase& pd );
 };
 

@@ -18,10 +18,11 @@ float						Boid::worldRadius;
 #endif // NO_LQ_BIN_STATS
 
 
+
 Boid::Boid( ProximityDatabase& pd ) {
 	  // allocate a token for this boid in the proximity database
 	proximityToken = NULL;
-	newPD (pd);
+	newPD(pd);
 
 	// reset all boid state
 	reset ();
@@ -84,7 +85,7 @@ void Boid::update (const float currentTime, const float elapsedTime) {
 }
 
 
-Boid::OpenSteerVec3 Boid::steerToFlock() {
+OpenSteerVec3 Boid::steerToFlock() {
 	// TODO:: ITERATIVELY REMOVE USING DIRECTIVE AS CLASS IS FLESHED OUT
 	using namespace OpenSteer;
 
@@ -172,6 +173,34 @@ void Boid::regenerateLocalSpace (const OpenSteerVec3& newVelocity, const float e
 
 	// // follow terrain surface
 	// regenerateLocalSpaceForTerrainFollowing (newVelocity, elapsedTime);
+}
+
+
+void Boid::regenerateLocalSpaceForBanking (const OpenSteerVec3& newVelocity, const float elapsedTime) {
+    // the length of this global-upward-pointing vector controls the vehicle's
+    // tendency to right itself as it is rolled over from turning acceleration
+    const OpenSteerVec3 globalUp (0, 0.2f, 0);
+
+    // acceleration points toward the center of local path curvature, the
+    // length determines how much the vehicle will roll while turning
+    const OpenSteerVec3 accelUp = smoothedAcceleration() * 0.05f;
+
+    // combined banking, sum of UP due to turning and global UP
+    const OpenSteerVec3 bankUp = accelUp + globalUp;
+
+    // blend bankUp into vehicle's UP basis vector
+    const float smoothRate = elapsedTime * 3;
+    OpenSteerVec3 tempUp = up();
+    blendIntoAccumulator (smoothRate, bankUp, tempUp);
+    setUp (tempUp.normalize());
+
+//  annotationLine (position(), position() + (globalUp * 4), gWhite);  // XXX
+//  annotationLine (position(), position() + (bankUp   * 4), gOrange); // XXX
+//  annotationLine (position(), position() + (accelUp  * 4), gRed);    // XXX
+//  annotationLine (position(), position() + (up ()    * 1), gYellow); // XXX
+
+    // adjust orthonormal basis vectors to be aligned with new velocity
+    if (speed() > 0) regenerateOrthonormalBasisUF (newVelocity / speed());
 }
 
 void Boid::newPD( ProximityDatabase& pd ) {
