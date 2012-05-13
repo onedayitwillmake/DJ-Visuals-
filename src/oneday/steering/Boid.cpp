@@ -12,7 +12,7 @@ namespace oneday { namespace steering {
 ///// Static definitions
 OpenSteer::AVGroup			Boid::neighbors;
 OpenSteer::ObstacleGroup	Boid::obstacles;
-float						Boid::worldRadius;
+float						Boid::worldRadius = 200.0;
 #ifndef NO_LQ_BIN_STATS
 	size_t Boid::minNeighbors, Boid::maxNeighbors, Boid::totalNeighbors;
 #endif // NO_LQ_BIN_STATS
@@ -73,6 +73,7 @@ void Boid::update (const float currentTime, const float elapsedTime) {
     using namespace OpenSteer;
 
 	OPENSTEER_UNUSED_PARAMETER(currentTime);
+
 
 	// steer to flock and avoid obstacles if any
 	applySteeringForce (steerToFlock(), elapsedTime);

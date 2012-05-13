@@ -18,6 +18,7 @@
 #include "gl.h"
 #include "cinder/gl/GlslProg.h"
 #include "cinder/Utilities.h"
+#include "OnedayUtils.h"
 
 #include "stream/CameraStreamController.h"
 #include "stream/VideoStreamPlayback.h"
@@ -145,9 +146,7 @@ void HelloWorldApp::setupSwarm() {
 
 void HelloWorldApp::setupSteering() {
 	openSteerController = new oneday::steering::OpenSteerController();
-//	OpenSteer::OpenSteerDemo::initialize ();
-//	OpenSteer::initializeGraphics (argc, argv);
-//	OpenSteer::runGraphics ();
+	openSteerController->setup();
 }
 
 void HelloWorldApp::setupGui() {
@@ -262,12 +261,9 @@ void HelloWorldApp::updateCameraTexture() {
 }
 
 void HelloWorldApp::update() {
-	// HACK TO BRING TO FRONT AT LAUNCHq
-	static bool hasBecomeFirstResponder = false;
-	if( !hasBecomeFirstResponder && getElapsedSeconds() > 2 ) {
-		hasBecomeFirstResponder = true;
-		this->setAlwaysOnTop( false );
-	}
+ALWAYS_ON_TOP_HACK
+
+	openSteerController->update();
 
 //	for( std::list< oneday::Boid* >::iterator itr = _swarm.begin(); itr != _swarm.end(); ++itr ) {
 //		(*itr)->wander( Constants::Boid::WANDER_STRENGTH );
@@ -285,8 +281,9 @@ void HelloWorldApp::update() {
 	requiredDelta *= 0.9f;
 }
 void HelloWorldApp::draw() {
-//	ci::gl::clear( ci::Color( 0, 0, 0 ) );
+	ci::gl::clear( ci::Color( 0, 0, 0 ) );
 	ci::gl::color( ci::ColorA(1.0f, 1.0f, 1.0f, 1.0f) );
+	openSteerController->draw();
 
 //	for( std::list< oneday::Boid* >::iterator itr = _swarm.begin(); itr != _swarm.end(); ++itr ) {
 //		ci::gl::drawSolidCircle( ci::Vec2f((*itr)->_position.x, (*itr)->_position.y), 5, 6 );
@@ -294,6 +291,7 @@ void HelloWorldApp::draw() {
 
 
 
+	return;
 	// Draw moshed camera
 	if( cameraHasNewFrame ) {
 		cameraTexture.enableAndBind();
@@ -315,4 +313,6 @@ void HelloWorldApp::shutdown() {
 	AppBasic::shutdown();
 }
 CINDER_APP_BASIC( HelloWorldApp, ci::app::RendererGl )
+
+
 //

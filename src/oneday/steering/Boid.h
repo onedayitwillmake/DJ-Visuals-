@@ -49,12 +49,12 @@ public:
 	void update( const float currentTime, const float elapsedTime );
 
 #ifndef NO_LQ_BIN_STATS
-        static size_t minNeighbors, maxNeighbors, totalNeighbors;
+	static size_t minNeighbors, maxNeighbors, totalNeighbors;
 #endif // NO_LQ_BIN_STATS
-private:
 	static OpenSteer::ObstacleGroup obstacles;
 	static OpenSteer::AVGroup neighbors;
 	static float worldRadius;
+private:
 
 	ProximityToken* proximityToken;
 
