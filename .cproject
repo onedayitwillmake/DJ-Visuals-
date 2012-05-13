@@ -40,7 +40,7 @@
 									<listOptionValue builtIn="false" value=""/>
 								</option>
 								<option id="macosx.cpp.link.option.userobjs.442770415" name="Other objects" superClass="macosx.cpp.link.option.userobjs"/>
-								<option id="macosx.cpp.link.option.flags.1225849360" name="Linker flags" superClass="macosx.cpp.link.option.flags" value="-arch i386 -framework Cocoa -framework OpenGL -framework Carbon -framework CoreVideo -framework QTKit -framework QuickTime -framework Accelerate -framework AudioToolbox -framework AudioUnit -framework CoreAudio" valueType="string"/>
+								<option id="macosx.cpp.link.option.flags.1225849360" name="Linker flags" superClass="macosx.cpp.link.option.flags" value="-arch i386 -framework Cocoa -framework OpenGL -framework GLUT -framework Carbon -framework CoreVideo -framework QTKit -framework QuickTime -framework Accelerate -framework AudioToolbox -framework AudioUnit -framework CoreAudio" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.macosx.cpp.linker.input.804648217" superClass="cdt.managedbuild.tool.macosx.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -55,6 +55,7 @@
 								<option id="gnu.cpp.compiler.option.include.paths.522131004" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="${CINDER_PATH}/boost"/>
 									<listOptionValue builtIn="false" value="${CINDER_PATH}/include"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/src&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/thirdparty&quot;"/>
 									<listOptionValue builtIn="false" value="/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/OpenGL.framework/Headers"/>
@@ -66,6 +67,10 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.macosx.base.1908464243" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.macosx.base">
 								<option id="gnu.c.compiler.option.misc.other.1901101210" name="Other flags" superClass="gnu.c.compiler.option.misc.other" value="-c -fmessage-length=0 -arch i386" valueType="string"/>
+								<option id="gnu.c.compiler.option.include.paths.1690532817" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/thirdparty&quot;"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.718522749" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 						</toolChain>
@@ -129,7 +134,7 @@
 									<listOptionValue builtIn="false" value=""/>
 								</option>
 								<option id="macosx.cpp.link.option.userobjs.1960672153" name="Other objects" superClass="macosx.cpp.link.option.userobjs"/>
-								<option id="macosx.cpp.link.option.flags.1414824315" name="Linker flags" superClass="macosx.cpp.link.option.flags" value="-arch i386 -framework Cocoa -framework OpenGL -framework Carbon -framework CoreVideo -framework QTKit -framework QuickTime -framework Accelerate -framework AudioToolbox -framework AudioUnit -framework CoreAudio" valueType="string"/>
+								<option id="macosx.cpp.link.option.flags.1414824315" name="Linker flags" superClass="macosx.cpp.link.option.flags" value="-arch i386 -framework Cocoa -framework OpenGL -framework GLUT -framework Carbon -framework CoreVideo -framework QTKit -framework QuickTime -framework Accelerate -framework AudioToolbox -framework AudioUnit -framework CoreAudio" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.macosx.cpp.linker.input.1013563184" superClass="cdt.managedbuild.tool.macosx.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -205,4 +210,5 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>

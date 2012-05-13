@@ -22,6 +22,7 @@
 #include "stream/CameraStreamController.h"
 #include "stream/VideoStreamPlayback.h"
 #include "Boid.h"
+#include "oneday/steering/OpenSteerController.h"
 
 #include <algorithm>
 #include <list>
@@ -41,6 +42,7 @@ public:
 	void setupGui();
 	void setupSwarm();
 	void setupShader();
+	void setupSteering();
 	void setupCameraStream();
 
 	std::string loadShader( const char* fileName );
@@ -67,7 +69,9 @@ public:
 	stream::CameraStreamController* cameraStream;
 	bool							cameraHasNewFrame;
 
+	// TODO: REMOVE and move into OpenSteer
 	std::list< oneday::Boid* >		_swarm;
+	oneday::steering::OpenSteerController *openSteerController;
 
 	// DEBUG
 	mowa::sgui::SimpleGUI* _gui;
@@ -86,6 +90,7 @@ void HelloWorldApp::setup() {
 	setupCameraStream();
 	setupSwarm();
 	setupGui();
+	setupSteering();
 
 	// Hack to force it to show up above everything else on start -
 	this->setAlwaysOnTop( true );
@@ -136,6 +141,13 @@ void HelloWorldApp::setupSwarm() {
 		boid->setPosition( getWindowWidth()/2 + windowDiagonalSize/2 * cosf(angle), getWindowHeight()/2 + windowDiagonalSize/2*sinf(angle), 0 );
 		_swarm.push_back( boid );
 	}
+}
+
+void HelloWorldApp::setupSteering() {
+	openSteerController = new oneday::steering::OpenSteerController();
+//	OpenSteer::OpenSteerDemo::initialize ();
+//	OpenSteer::initializeGraphics (argc, argv);
+//	OpenSteer::runGraphics ();
 }
 
 void HelloWorldApp::setupGui() {

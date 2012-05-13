@@ -1,0 +1,203 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svnroot/opensteer/!svn/ver/190/trunk/include/OpenSteer
+END
+SimpleVehicle.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/opensteer/!svn/ver/188/trunk/include/OpenSteer/SimpleVehicle.h
+END
+SegmentedPathAlikeUtilities.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/SegmentedPathAlikeUtilities.h
+END
+Vec3Utilities.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/Vec3Utilities.h
+END
+Draw.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/Draw.h
+END
+PolylineSegmentedPathwaySingleRadius.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/PolylineSegmentedPathwaySingleRadius.h
+END
+Vec3.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/Vec3.h
+END
+UnusedParameter.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/UnusedParameter.h
+END
+Proximity.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/Proximity.h
+END
+QueryPathAlikeBaseDataExtractionPolicies.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/QueryPathAlikeBaseDataExtractionPolicies.h
+END
+SteerLibrary.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/SteerLibrary.h
+END
+SharedPointer.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/SharedPointer.h
+END
+Color.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/Color.h
+END
+PolylineSegmentedPathwaySegmentRadii.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/PolylineSegmentedPathwaySegmentRadii.h
+END
+QueryPathAlikeMappings.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/QueryPathAlikeMappings.h
+END
+SegmentedPath.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/SegmentedPath.h
+END
+Camera.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/opensteer/!svn/ver/190/trunk/include/OpenSteer/Camera.h
+END
+Clock.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/Clock.h
+END
+Obstacle.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/Obstacle.h
+END
+Path.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/Path.h
+END
+PlugIn.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/PlugIn.h
+END
+AbstractVehicle.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/AbstractVehicle.h
+END
+PolylineSegmentedPath.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/PolylineSegmentedPath.h
+END
+LocalSpace.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/LocalSpace.h
+END
+SegmentedPathway.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/SegmentedPathway.h
+END
+OpenSteerDemo.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/OpenSteerDemo.h
+END
+Annotation.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/Annotation.h
+END
+Utilities.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/Utilities.h
+END
+OldPathway.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/OldPathway.h
+END
+lq.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/lq.h
+END
+Pathway.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/Pathway.h
+END
+QueryPathAlikeUtilities.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/QueryPathAlikeUtilities.h
+END
+StandardTypes.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/StandardTypes.h
+END
+QueryPathAlike.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/opensteer/!svn/ver/181/trunk/include/OpenSteer/QueryPathAlike.h
+END

@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/opensteer/!svn/ver/104/tags/OpenSteer_0_8_2/opensteer/include/OpenSteer
+END
+SimpleVehicle.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/opensteer/!svn/ver/104/tags/OpenSteer_0_8_2/opensteer/include/OpenSteer/SimpleVehicle.h
+END
+Clock.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/opensteer/!svn/ver/104/tags/OpenSteer_0_8_2/opensteer/include/OpenSteer/Clock.h
+END
+Obstacle.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/opensteer/!svn/ver/104/tags/OpenSteer_0_8_2/opensteer/include/OpenSteer/Obstacle.h
+END
+Draw.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/opensteer/!svn/ver/104/tags/OpenSteer_0_8_2/opensteer/include/OpenSteer/Draw.h
+END
+PlugIn.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/opensteer/!svn/ver/104/tags/OpenSteer_0_8_2/opensteer/include/OpenSteer/PlugIn.h
+END
+Vec3.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/opensteer/!svn/ver/104/tags/OpenSteer_0_8_2/opensteer/include/OpenSteer/Vec3.h
+END
+AbstractVehicle.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svnroot/opensteer/!svn/ver/104/tags/OpenSteer_0_8_2/opensteer/include/OpenSteer/AbstractVehicle.h
+END
+Proximity.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/opensteer/!svn/ver/104/tags/OpenSteer_0_8_2/opensteer/include/OpenSteer/Proximity.h
+END
+LocalSpace.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/opensteer/!svn/ver/104/tags/OpenSteer_0_8_2/opensteer/include/OpenSteer/LocalSpace.h
+END
+SteerLibrary.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/opensteer/!svn/ver/104/tags/OpenSteer_0_8_2/opensteer/include/OpenSteer/SteerLibrary.h
+END
+OpenSteerDemo.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/opensteer/!svn/ver/104/tags/OpenSteer_0_8_2/opensteer/include/OpenSteer/OpenSteerDemo.h
+END
+Annotation.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/opensteer/!svn/ver/104/tags/OpenSteer_0_8_2/opensteer/include/OpenSteer/Annotation.h
+END
+Utilities.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/opensteer/!svn/ver/104/tags/OpenSteer_0_8_2/opensteer/include/OpenSteer/Utilities.h
+END
+lq.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/opensteer/!svn/ver/104/tags/OpenSteer_0_8_2/opensteer/include/OpenSteer/lq.h
+END
+Pathway.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/opensteer/!svn/ver/104/tags/OpenSteer_0_8_2/opensteer/include/OpenSteer/Pathway.h
+END
+Camera.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/opensteer/!svn/ver/104/tags/OpenSteer_0_8_2/opensteer/include/OpenSteer/Camera.h
+END
