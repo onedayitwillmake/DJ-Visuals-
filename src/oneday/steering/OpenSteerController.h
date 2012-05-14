@@ -12,6 +12,7 @@
 #include "OpenSteer/Proximity.h"
 #include "oneday/steering/Boid.h"
 
+
 namespace oneday { namespace steering {
 class OpenSteerController {
 

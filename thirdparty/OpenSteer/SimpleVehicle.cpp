@@ -189,6 +189,8 @@ OpenSteer::SimpleVehicle::applySteeringForce (const Vec3& force,
     // Euler integrate (per frame) acceleration into velocity
     newVelocity += _smoothedAcceleration * elapsedTime;
 
+//    std::cout << newVelocity << std::endl;
+
     // enforce speed limit
     newVelocity = newVelocity.truncateLength (maxSpeed ());
 

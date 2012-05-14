@@ -30,9 +30,10 @@ void Boid::reset() {
 	_wanderDistance = 60.0f;
 	_wanderStep = 0.25;
 
-	_wanderPhi = ci::Rand::randFloat( M_PI * 2 );
-	_wanderPsi = ci::Rand::randFloat( M_PI * 2 );
-	_wanderTheta = ci::Rand::randFloat( M_PI * 2 );
+
+//	_wanderPhi = OpenSteer::frandom01()*M_PI * 2;
+//	_wanderPsi = OpenSteer::frandom01()*M_PI * 2;
+//	_wanderTheta = OpenSteer::frandom01()*M_PI * 2;
 }
 
 #pragma mark Tick

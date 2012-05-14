@@ -55,20 +55,26 @@ public:
 	static OpenSteer::AVGroup neighbors;
 	static float worldRadius;
 private:
-
 	ProximityToken* proximityToken;
 
 	OpenSteerVec3 steerToFlock();
-	void
-	sphericalWrapAround();
+	OpenSteerVec3 wander( float aMultiplier );
 
-	void
-	regenerateLocalSpace( const OpenSteerVec3& newVelocity, const float elapsedTime );
+	void sphericalWrapAround();
+
+	void regenerateLocalSpace( const OpenSteerVec3& newVelocity, const float elapsedTime );
 
 	void regenerateLocalSpaceForBanking (const OpenSteerVec3& newVelocity, const float elapsedTime);
 
+	float	_wanderTheta;
+	float	_wanderPhi;
+	float	_wanderPsi;
+	float	_wanderRadius;
+	float	_wanderDistance;
+	float	_wanderStep;
 
-//	///// ACCESSORS
+
+	///// ACCESSORS
 	void newPD( ProximityDatabase& pd );
 };
 

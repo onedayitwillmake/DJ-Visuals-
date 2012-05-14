@@ -35,6 +35,9 @@
 #include "Constants.h"
 #include "SimpleGUI.h"
 
+#include "cinder/Camera.h"
+#include "cinder/MayaCamUI.h"
+
 //namespace mowa { namespace sgui { class SimpleGUI; } }
 
 class HelloWorldApp : public ci::app::AppBasic {
@@ -43,13 +46,20 @@ public:
 	void setupGui();
 	void setupSwarm();
 	void setupShader();
+	void setupCamera();
 	void setupSteering();
 	void setupCameraStream();
 
 	std::string loadShader( const char* fileName );
 
 	void prepareSettings( ci::app::AppBasic::Settings *settings );
+
 	void mouseDown( ci::app::MouseEvent event );
+	void mouseMove( ci::app::MouseEvent event );
+	void mouseDrag( ci::app::MouseEvent event );
+	void mouseUp( ci::app::MouseEvent event );
+	void resize( ci::app::ResizeEvent event );
+
 	void keyDown( ci::app::KeyEvent event );
 	void update();
 	void updateColorArray();
@@ -74,10 +84,12 @@ public:
 	std::list< oneday::Boid* >		_swarm;
 	oneday::steering::OpenSteerController *openSteerController;
 
-	// DEBUG
-	mowa::sgui::SimpleGUI* _gui;
+	///// DEBUG
+	mowa::sgui::SimpleGUI*	_gui;
 	bool					_drawGui;
 	bool debugResetBoids( ci::app::MouseEvent event );
+
+	ci::MayaCamUI		_mayaCam;
 };
 
 void HelloWorldApp::prepareSettings( ci::app::AppBasic::Settings *settings ) {
@@ -91,7 +103,9 @@ void HelloWorldApp::setup() {
 	setupCameraStream();
 	setupSwarm();
 	setupGui();
+
 	setupSteering();
+	setupCamera();
 
 	// Hack to force it to show up above everything else on start -
 	this->setAlwaysOnTop( true );
@@ -149,6 +163,20 @@ void HelloWorldApp::setupSteering() {
 	openSteerController->setup();
 }
 
+void HelloWorldApp::setupCamera()
+{
+	// Camera perspective properties
+	float cameraFOV			= 80.0f;
+	float cameraNear		= 1.0f;
+	float cameraFar			= 10000;
+
+	ci::CameraPersp aCameraPersp = ci::CameraPersp( getWindowWidth(), getWindowHeight(), cameraFOV, cameraNear, cameraFar );
+	aCameraPersp.setCenterOfInterestPoint( ci::Vec3f( 0,0, 100.0f ) );
+	aCameraPersp.setEyePoint( ci::Vec3f( 0,0, 0.0f ) );
+
+	_mayaCam.setCurrentCam(  aCameraPersp );
+
+}
 void HelloWorldApp::setupGui() {
 	_gui = new mowa::sgui::SimpleGUI( this );
 	_gui->textColor = ci::ColorA(1,1,1,1);
@@ -186,7 +214,30 @@ std::string HelloWorldApp::loadShader( const char* fileName ) {
 	return vertexShaderString;
 }
 
-void HelloWorldApp::mouseDown( ci::app::MouseEvent event ) {
+void HelloWorldApp::mouseDown( ci::app::MouseEvent event )
+{
+	_mayaCam.mouseDown( event.getPos() );
+}
+
+void HelloWorldApp::mouseDrag( ci::app::MouseEvent event )
+{
+	_mayaCam.mouseDrag( event.getPos(), event.isLeftDown(), event.isMetaDown(), event.isRightDown() );
+}
+
+void HelloWorldApp::mouseMove( ci::app::MouseEvent event )
+{
+	_mayaCam.mouseDrag( event.getPos(), event.isLeftDown(), event.isMetaDown(), event.isRightDown() );
+}
+
+void HelloWorldApp::mouseUp( ci::app::MouseEvent event )
+{
+	_mayaCam.mouseDown( event.getPos() );
+}
+
+void HelloWorldApp::resize( ci::app::ResizeEvent event ) {
+	ci::CameraPersp cam = _mayaCam.getCamera();
+	cam.setPerspective( 60,  getWindowAspectRatio(), 1, std::numeric_limits<int>::max());
+	_mayaCam.setCurrentCam( cam );
 }
 
 void HelloWorldApp::keyDown( ci::app::KeyEvent event ) {
@@ -283,7 +334,22 @@ ALWAYS_ON_TOP_HACK
 void HelloWorldApp::draw() {
 	ci::gl::clear( ci::Color( 0, 0, 0 ) );
 	ci::gl::color( ci::ColorA(1.0f, 1.0f, 1.0f, 1.0f) );
-	openSteerController->draw();
+
+	// DRAW BOIDS
+	ci::gl::pushMatrices();
+		ci::gl::setMatrices( _mayaCam.getCamera() );
+//		ci::gl::enableWireframe();
+			ci::gl::enableDepthRead();
+				ci::gl::enableDepthWrite();
+					ci::gl::enableAlphaBlending();
+						openSteerController->draw();
+					ci::gl::disableAlphaBlending();
+				ci::gl::disableDepthRead();
+			ci::gl::disableDepthWrite();
+//		ci::gl::disableWireframe();
+	gl::popMatrices();
+
+
 
 //	for( std::list< oneday::Boid* >::iterator itr = _swarm.begin(); itr != _swarm.end(); ++itr ) {
 //		ci::gl::drawSolidCircle( ci::Vec2f((*itr)->_position.x, (*itr)->_position.y), 5, 6 );

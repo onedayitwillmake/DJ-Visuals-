@@ -17,6 +17,8 @@
 #include "OpenSteer/UnusedParameter.h"
 
 #include "cinder/app/AppBasic.h"
+#include "cinder/gl/gl.h"
+
 #include <iostream>
 
 namespace oneday { namespace steering {
@@ -39,7 +41,7 @@ void OpenSteerController::setup() {
 
     // make default-sized flock
 	population = 0;
-    for (int i = 0; i < 300; i++) addBoidToFlock ();
+    for (int i = 0; i < 500; i++) addBoidToFlock ();
 }
 
 ///// MEMORY
@@ -93,15 +95,10 @@ void OpenSteerController::update() {
 }
 
 void OpenSteerController::draw() {
+
     for(std::vector< Boid* >::const_iterator itr = _flock.begin(); itr != _flock.end(); ++itr) {
-        ci::Vec3f position2D = ci::Vec3f( (*itr)->smoothedPosition().x, (*itr)->smoothedPosition().y, (*itr)->smoothedPosition().z );
-        position2D *= 5;
-        position2D.x += ci::app::App::get()->getWindowCenter().x;
-		position2D.y += ci::app::App::get()->getWindowCenter().y;
-
-        ci::gl::drawSphere( position2D, 5, 6 );
+    	(*itr)->draw();
     }
-
 }
 
 
